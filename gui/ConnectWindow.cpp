@@ -64,7 +64,7 @@ ConnectWindow &ConnectWindow::build(GtkApplication *app)
     this->m_Box_Baud = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
     this->m_Label_Baud = gtk_label_new("Baud: ");
     this->m_Entry_Baud = gtk_entry_new();
-    gtk_entry_set_text(GTK_ENTRY(this->m_Entry_Baud), "115200");
+    gtk_entry_set_text(GTK_ENTRY(this->m_Entry_Baud), "576000");
 
     gtk_box_pack_start(GTK_BOX(this->m_Box_Baud), this->m_Label_Baud, false, false, 0);
     gtk_box_pack_start(GTK_BOX(this->m_Box_Baud), this->m_Entry_Baud, false, false, 0);

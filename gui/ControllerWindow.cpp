@@ -93,6 +93,11 @@ ControllerWindow &ControllerWindow::build(uint8_t motorCount, GtkApplication *ap
         g_signal_connect(gtkMotor.motorMoveButton, "pressed", G_CALLBACK(ControllerWindow::onMovePressed), args);
         gtk_box_pack_start(GTK_BOX(gtkMotor.motorMoveBox), gtkMotor.motorMoveButton, false, false, 5);
 
+        // Creates the rotating icon
+        gtkMotor.motorMovingSpinner = gtk_spinner_new();
+        gtk_spinner_stop(GTK_SPINNER(gtkMotor.motorMovingSpinner));
+        gtk_box_pack_end(GTK_BOX(gtkMotor.motorStatusBox), gtkMotor.motorMovingSpinner, false, false, 5);
+
         // Creates the status elements
         gtkMotor.motorPositionLabel = gtk_label_new("Pos: *");
         gtk_box_pack_start(GTK_BOX(gtkMotor.motorStatusBox), gtkMotor.motorPositionLabel, false, false, 5);
@@ -142,15 +147,23 @@ gboolean ControllerWindow::updateStats(void *udata)
 {
     ControllerWindow &window = *reinterpret_cast<ControllerWindow *>(udata);
 
-    for (uint8_t i = 0; i < g_Driver.getMotorCount(); ++i)
+    try {
+        for (uint8_t i = 0; i < g_Driver.getMotorCount(); ++i)
+        {
+            auto status = g_Driver.getMotorStats(i);
+
+            sprintf(window.m_GTKMotors[i].motorPositionLabelText, "Pos: %d", status.pos);
+            gtk_label_set_text(GTK_LABEL(window.m_GTKMotors[i].motorPositionLabel), window.m_GTKMotors[i].motorPositionLabelText);
+
+            sprintf(window.m_GTKMotors[i].motorSpsLabelText, "SPS: %d", status.current_sps);
+            gtk_label_set_text(GTK_LABEL(window.m_GTKMotors[i].motorSpsLabel), window.m_GTKMotors[i].motorSpsLabelText);
+
+            if (status.moving) gtk_spinner_start(GTK_SPINNER(window.m_GTKMotors[i].motorMovingSpinner));
+            else gtk_spinner_stop(GTK_SPINNER(window.m_GTKMotors[i].motorMovingSpinner));
+        }
+    } catch (const std::runtime_error &e)
     {
-        auto status = g_Driver.getMotorStats(i);
-
-        sprintf(window.m_GTKMotors[i].motorPositionLabelText, "Pos: %u", status.pos);
-        gtk_label_set_text(GTK_LABEL(window.m_GTKMotors[i].motorPositionLabel), window.m_GTKMotors[i].motorPositionLabelText);
-
-        sprintf(window.m_GTKMotors[i].motorSpsLabelText, "SPS: %u", status.current_sps);
-        gtk_label_set_text(GTK_LABEL(window.m_GTKMotors[i].motorSpsLabel), window.m_GTKMotors[i].motorSpsLabelText);
+        std::cerr << "updateStats() failed : "  << e.what() << std::endl;
     }
 
     return TRUE;

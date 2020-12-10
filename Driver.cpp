@@ -56,8 +56,8 @@ Driver &Driver::connect(void)
     tty.c_oflag &= ~OPOST;                  /* Prevent special interpretation of output bytes */
     tty.c_oflag &= ~ONLCR;                  /* Prevent newline conversion */
 
-    tty.c_cc[VTIME] = 0;                    /* Block until bytes received */
-    tty.c_cc[VMIN] = 1;                     /* One byte per read */
+    tty.c_cc[VTIME] = 5;                    /* Block until bytes received */
+    tty.c_cc[VMIN] = 100;                     /* One byte per read */
 
     cfsetispeed(&tty, this->m_Baud);        /* Set input speed */
     cfsetospeed(&tty, this->m_Baud);        /* Set output speed */
@@ -146,14 +146,14 @@ Driver &Driver::setMotorPos(uint8_t motor, int32_t pos)
 
 void Driver::writeByte(uint8_t b)
 {
-    if (write(this->m_FD, &b, 1) < 0)
+    if (write(this->m_FD, &b, 1) <= 0)
         throw std::runtime_error(std::string("write() failed: ") + strerror(errno));
 }
 
 uint8_t Driver::readByte(void)
 {
     uint8_t res;
-    if (read(this->m_FD, &res, 1) < 0)
+    if (read(this->m_FD, &res, 1) <= 0)
         throw std::runtime_error(std::string("read() failed: ") + strerror(errno));
 
     return res;

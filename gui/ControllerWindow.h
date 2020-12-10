@@ -20,6 +20,7 @@ typedef struct {
     GtkWidget *motorEnableButton, *motorDisableButton, *motorMoveButton;
     GtkWidget *motorPositionInput;
     GtkWidget *motorPositionLabel, *motorSpsLabel, *titleLabel;
+    GtkWidget *motorMovingSpinner;
 
     char motorPositionLabelText[64];
     char motorSpsLabelText[64];
