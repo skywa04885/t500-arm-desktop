@@ -139,7 +139,7 @@ ControllerWindow &ControllerWindow::launch(void)
     gtk_widget_show_all(this->m_Window_Root);
 
     // Creates the updater
-    g_timeout_add_seconds(1, ControllerWindow::updateStats, reinterpret_cast<void *>(this));
+    g_timeout_add(101, ControllerWindow::updateStats, reinterpret_cast<void *>(this));
     return *this;
 }
 

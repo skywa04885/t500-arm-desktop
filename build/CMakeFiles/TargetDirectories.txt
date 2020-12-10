@@ -1,0 +1,3 @@
+/mnt/idfk/t500-arm-desktop/build/CMakeFiles/rebuild_cache.dir
+/mnt/idfk/t500-arm-desktop/build/CMakeFiles/edit_cache.dir
+/mnt/idfk/t500-arm-desktop/build/CMakeFiles/t500_arm_desktop.dir
